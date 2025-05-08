@@ -54,17 +54,19 @@ button:hover {
 
 ul {
     list-style: none;
-    padding: 0;
+    padding: 10px;
 }
 
 li {
-    padding: 0.5rem;
+    padding:10px;
     border: 1px solid #ccc;
-    margin-bottom: 0.5rem;
+    margin-bottom: 10px;
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+
 }
 
 li.completed {
@@ -76,15 +78,20 @@ li.completed {
     background-color: #dc3545;
     color: #fff;
     border: none;
-    padding: 0.2rem 0.5rem;
+    padding: 10px;
+    margin-left: 10px;
     border-radius: 4px;
     cursor: pointer;
+    max-width: 200px;
 }
 
 .delete-btn:hover {
     background-color: #c82333;
+    max-width: 200px;
 }
-
+.taskList{
+    max-width: 500px;
+}
     </style>
 </head>
 <body>

@@ -6,7 +6,7 @@
     <title>Интерактивный список дел</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif, sans-serif;
             background-color: #f4f4f9;
             margin: 0;
             padding: 0;
@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            transition: background-color 0.5s ease;
+            transition: background-color 1s ease;
         }
 
         .container-wrapper {
@@ -34,14 +34,14 @@
             width: 300px;
             max-height: 80vh;
             overflow-y: auto;
-            transition: all 0.5s ease;
+            transition: all 1s ease;
             margin-bottom: 20px;
         }
 
         h1 {
             text-align: center;
             margin-bottom: 1rem;
-            transition: all 0.5s ease;
+            transition: all 1s ease;
         }
 
         input {
@@ -50,19 +50,18 @@
             margin-bottom: 1rem;
             border: 1px solid #ccc;
             border-radius: 4px;
-            transition: all 0.5s ease;
+            transition: all 1s ease;
         }
 
         input:focus {
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            animation: pulse 0.5s ease;
+            animation: pulse 1s ease;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
+            100% { transform: scale(1.05); }
         }
 
         button {
@@ -73,19 +72,19 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.5s ease;
+            transition:  2s ease;
         }
 
         button:hover {
             background-color: #0056b3;
             transform: scale(1.05);
-            animation: pulse 0.5s ease;
+            animation: pulse 2s ease;
         }
 
         ul {
             list-style: none;
             padding: 0;
-            transition: all 0.5s ease;
+            transition: all 2s ease;
             position: relative;
         }
 
@@ -98,9 +97,9 @@
             justify-content: space-between;
             align-items: center;
             word-break: break-word;
-            transition: all 0.5s ease;
+            transition: all 2s ease;
             opacity: 0;
-            transform: translateY(-50px);
+            transform: translateY(-25px);
             position: relative;
             z-index: 1;
         }
@@ -108,18 +107,18 @@
         li.visible {
             opacity: 1;
             transform: translateY(0);
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 2s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-50px); }
+            from { opacity: 0; transform: translateY(-25px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         li.completed .task-text {
             text-decoration: line-through;
             color: #888;
-            animation: fadeOut 0.5s ease;
+            animation: fadeOut 2s ease;
         }
 
         @keyframes fadeOut {
@@ -130,27 +129,26 @@
         li.priority {
             background-color: #fff3cd;
             border-color: #ffecb5;
-            animation: highlight 0.5s ease;
+            animation: highlight 2s ease;
         }
 
         @keyframes highlight {
             0% { background-color: #fff; }
-            50% { background-color: #fff3cd; }
             100% { background-color: #fff3cd; }
         }
 
         li.priority-move-up {
-            animation: moveUp 0.5s ease;
+            animation: moveUp 1s ease-in;
         }
 
         @keyframes moveUp {
             0% { transform: translateY(0); z-index: 1; }
-            50% { transform: translateY(-50x); z-index: 10; }
+            50% { transform: translateY(-100x); z-index: 10; }
             100% { transform: translateY(0); z-index: 10; }
         }
 
         li.priority-move-down {
-            animation: moveDown 0.5s ease;
+            animation: moveDown 1s ease;
         }
 
         @keyframes moveDown {
@@ -164,12 +162,12 @@
             margin-right: 10px;
             padding: 5px;
             border-radius: 4px;
-            transition: all 0.5s ease;
+            transition: all 2s ease;
         }
 
         .task-text {
             display: block;
-            transition: all 0.5s ease;
+            transition: all 1s ease;
         }
 
         .delete-btn {
@@ -180,20 +178,20 @@
             border-radius: 4px;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.5s ease;
+            transition: all 1s ease;
         }
 
         .delete-btn:hover {
             background-color: #c82333;
-            transform: scale(1.1);
-            animation: shake 0.5s ease;
+
+            animation: shake 2s ease;
         }
 
         @keyframes shake {
             0% { transform: translateX(0); }
-            25% { transform: translateX(-2px); }
-            50% { transform: translateX(2px); }
-            75% { transform: translateX(-2px); }
+            25% { transform: translateX(-1px); }
+            50% { transform: translateX(1px); }
+            75% { transform: translateX(-1px); }
             100% { transform: translateX(0); }
         }
 
@@ -206,18 +204,17 @@
             border-radius: 4px;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.5s ease;
+            transition: all 2s ease;
         }
 
         .priority-btn:hover {
             background-color: #ffb300;
-            transform: scale(1.1);
-            animation: pulse 0.5s ease;
+            animation: pulse 2s ease;
         }
 
         .task-actions {
             display: flex;
-            transition: all 0.5s ease;
+            transition: all 2s ease;
         }
 
         .slider-container {
@@ -316,7 +313,7 @@
                         <span class="task-text">${task.text}</span>
                     </div>
                     <div class="task-actions">
-                        <button class="priority-btn" data-id="${task.id}">${task.priority ? 'Снять приоритет' : 'Приоритет'}</button>
+                        <button class="priority-btn" data-id="${task.id}">${task.priority ? 'Открепить' : 'Закрепить'}</button>
                         <button class="delete-btn" data-id="${task.id}">Удалить</button>
                     </div>
                 `;

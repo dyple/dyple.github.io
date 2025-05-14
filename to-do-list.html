@@ -4,159 +4,448 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Интерактивный список дел</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.5s ease;
+        }
 
-.container {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
+        .container-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+        }
 
-h1 {
-    text-align: center;
-    margin-bottom: 1rem;
-}
+        .container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: all 0.5s ease;
+            margin-bottom: 20px;
+        }
 
-input {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.5s ease;
+        }
 
-button {
-    width: 100%;
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
 
-button:hover {
-    background-color: #0056b3;
-}
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            animation: pulse 0.5s ease;
+        }
 
-ul {
-    list-style: none;
-    padding: 10px;
-}
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
 
-li {
-    padding:10px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+        button {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
 
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+            animation: pulse 0.5s ease;
+        }
 
-}
+        ul {
+            list-style: none;
+            padding: 0;
+            transition: all 0.5s ease;
+            position: relative;
+        }
 
-li.completed {
-    text-decoration: line-through;
-    color: #888;
-}
+        li {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            word-break: break-word;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(-50px);
+            position: relative;
+            z-index: 1;
+        }
 
-.delete-btn {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    margin-left: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    max-width: 200px;
-}
+        li.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeIn 0.5s ease;
+        }
 
-.delete-btn:hover {
-    background-color: #c82333;
-    max-width: 200px;
-}
-.taskList{
-    max-width: 500px;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        li.completed .task-text {
+            text-decoration: line-through;
+            color: #888;
+            animation: fadeOut 0.5s ease;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0.7; }
+        }
+
+        li.priority {
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+            animation: highlight 0.5s ease;
+        }
+
+        @keyframes highlight {
+            0% { background-color: #fff; }
+            50% { background-color: #fff3cd; }
+            100% { background-color: #fff3cd; }
+        }
+
+        li.priority-move-up {
+            animation: moveUp 0.5s ease;
+        }
+
+        @keyframes moveUp {
+            0% { transform: translateY(0); z-index: 1; }
+            50% { transform: translateY(-100px); z-index: 10; }
+            100% { transform: translateY(0); z-index: 10; }
+        }
+
+        li.priority-move-down {
+            animation: moveDown 0.5s ease;
+        }
+
+        @keyframes moveDown {
+            0% { transform: translateY(0); z-index: 10; }
+            50% { transform: translateY(100px); z-index: 1; }
+            100% { transform: translateY(0); z-index: 1; }
+        }
+
+        .task-box {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+
+        .task-text {
+            display: block;
+            transition: all 0.5s ease;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.5s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.1);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .priority-btn {
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.5s ease;
+        }
+
+        .priority-btn:hover {
+            background-color: #ffb300;
+            transform: scale(1.1);
+            animation: pulse 0.5s ease;
+        }
+
+        .task-actions {
+            display: flex;
+            transition: all 0.5s ease;
+        }
+
+        .slider-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .slider {
+            width: 100%;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Список дел</h1>
-        <input type="text" id="taskInput" placeholder="Добавьте новую задачу">
-        <button id="addTaskBtn">Добавить</button>
-        <ul id="taskList"></ul>
+    <div class="container-wrapper">
+        <div class="container" id="taskContainer">
+            <h1>Список дел</h1>
+            <input type="text" id="taskInput" placeholder="Добавьте новую задачу">
+            <button id="addTaskBtn">Добавить</button>
+            <ul id="taskList"></ul>
+        </div>
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>Узкий</span>
+                <span>Широкий</span>
+            </div>
+            <input type="range" min="300" max="1000" value="300" class="slider" id="widthSlider">
+        </div>
     </div>
-    <script >
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
-    const taskInput = document.getElementById('taskInput');
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    const taskList = document.getElementById('taskList');
+            const taskInput = document.getElementById('taskInput');
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const taskList = document.getElementById('taskList');
+            const taskContainer = document.getElementById('taskContainer');
+            const widthSlider = document.getElementById('widthSlider');
 
-    // Загрузка задач из localStorage
-    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            // Загрузка задач из localStorage
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-    function renderTasks() {
-        taskList.innerHTML = '';
-        tasks.forEach((task, index) => {
-            const li = document.createElement('li');
-            li.className = task.completed ? 'completed' : '';
-            li.innerHTML = `
-                <span>${task.text}</span>
-                <button class="delete-btn" data-index="${index}">Удалить</button>
-            `;
-            li.addEventListener('click', () => toggleTaskCompletion(index));
-            taskList.appendChild(li);
-        });
-    }
+            // Если задач нет или у них нет идентификаторов, создаем новые задачи с идентификаторами
+            if (tasks.length === 0 || !tasks[0].id) {
+                tasks = tasks.map((task, index) => ({
+                    ...task,
+                    id: Date.now().toString() + index
+                }));
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
 
-    function addTask() {
-        const taskText = taskInput.value.trim();
-        if (taskText) {
-            tasks.push({ text: taskText, completed: false });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+            // Проверяем, когда был последний заход
+            const lastVisit = localStorage.getItem('lastVisit');
+            const now = new Date().getTime();
+            const twoMinutes = 2 * 60 * 1000; // 2 минуты в миллисекундах
+
+            // Если первый заход или прошло более 2 минут с последнего захода, проигрываем анимацию
+            if (!lastVisit || now - lastVisit > twoMinutes) {
+                localStorage.setItem('lastVisit', now);
+                playInitialAnimation = true;
+            } else {
+                playInitialAnimation = false;
+            }
+
+            // Устанавливаем начальную ширину контейнера
+            taskContainer.style.width = widthSlider.value + 'px';
+
+            // Обработчик изменения ползунка
+            widthSlider.addEventListener('input', () => {
+                taskContainer.style.width = widthSlider.value + 'px';
+            });
+
+            function renderTasks() {
+                taskList.innerHTML = '';
+                // Сначала отображаем задачи с приоритетом
+                tasks.filter(task => task.priority).forEach((task) => {
+                    renderTask(task);
+                });
+                // Затем отображаем обычные задачи
+                tasks.filter(task => !task.priority).forEach((task) => {
+                    renderTask(task);
+                });
+            }
+
+            function renderTask(task) {
+                const li = document.createElement('li');
+                li.className = task.completed ? 'completed' : '';
+                if (task.priority) {
+                    li.classList.add('priority');
+                }
+                li.innerHTML = `
+                    <div class="task-box">
+                        <span class="task-text">${task.text}</span>
+                    </div>
+                    <div class="task-actions">
+                        <button class="priority-btn" data-id="${task.id}">${task.priority ? 'Снять приоритет' : 'Приоритет'}</button>
+                        <button class="delete-btn" data-id="${task.id}">Удалить</button>
+                    </div>
+                `;
+                li.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('task-text')) {
+                        toggleTaskCompletion(task.id);
+                    }
+                });
+                taskList.appendChild(li);
+
+                // Добавляем анимацию появления только при первом заходе или если прошло более 2 минут
+                if (playInitialAnimation) {
+                    setTimeout(() => {
+                        li.classList.add('visible');
+                    }, 10);
+                } else {
+                    li.classList.add('visible');
+                }
+            }
+
+            function addTask() {
+                const taskText = taskInput.value.trim();
+                if (taskText) {
+                    const taskId = Date.now().toString();
+                    tasks.push({ id: taskId, text: taskText, completed: false, priority: false });
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    renderTasks();
+                    taskInput.value = '';
+
+                    // Анимация для поля ввода
+                    taskInput.style.borderColor = '#007bff';
+                    setTimeout(() => {
+                        taskInput.style.borderColor = '#ccc';
+                    }, 500);
+                } else {
+                    // Анимация для пустого поля ввода
+                    taskInput.style.borderColor = '#dc3545';
+                    setTimeout(() => {
+                        taskInput.style.borderColor = '#ccc';
+                    }, 500);
+                }
+            }
+
+            function deleteTask(taskId) {
+                const taskElement = document.querySelector(`[data-id="${taskId}"]`).closest('li');
+                taskElement.style.opacity = '0';
+                taskElement.style.transform = 'translateX(50px)';
+                taskElement.style.animation = 'fadeOut 0.5s ease';
+
+                setTimeout(() => {
+                    tasks = tasks.filter(task => task.id !== taskId);
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    renderTasks();
+                }, 500);
+            }
+
+            function toggleTaskCompletion(taskId) {
+                const taskElement = document.querySelector(`[data-id="${taskId}"]`).closest('li');
+                const taskTextElement = taskElement.querySelector('.task-text');
+                taskTextElement.style.transform = 'scale(0.95)';
+                taskTextElement.style.animation = 'pulse 0.5s ease';
+
+                setTimeout(() => {
+                    taskTextElement.style.transform = 'scale(1)';
+                    tasks = tasks.map(task => {
+                        if (task.id === taskId) {
+                            return { ...task, completed: !task.completed };
+                        }
+                        return task;
+                    });
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    renderTasks();
+                }, 500);
+            }
+
+            function toggleTaskPriority(taskId) {
+                const taskElement = document.querySelector(`[data-id="${taskId}"]`).closest('li');
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                const task = tasks[taskIndex];
+
+                if (!task.priority) {
+                    // Если задача не имеет приоритета, добавляем анимацию перемещения вверх
+                    taskElement.style.position = 'relative';
+                    taskElement.style.zIndex = '10';
+                    taskElement.classList.add('priority-move-up');
+
+                    setTimeout(() => {
+                        taskElement.style.position = 'relative';
+                        taskElement.style.zIndex = '1';
+                        taskElement.classList.remove('priority-move-up');
+                    }, 500);
+                } else {
+                    // Если задача имеет приоритет, добавляем анимацию перемещения вниз
+                    taskElement.style.position = 'relative';
+                    taskElement.style.zIndex = '10';
+                    taskElement.classList.add('priority-move-down');
+
+                    setTimeout(() => {
+                        taskElement.style.position = 'relative';
+                        taskElement.style.zIndex = '1';
+                        taskElement.classList.remove('priority-move-down');
+                    }, 500);
+                }
+
+                setTimeout(() => {
+                    tasks = tasks.map(task => {
+                        if (task.id === taskId) {
+                            return { ...task, priority: !task.priority };
+                        }
+                        return task;
+                    });
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    renderTasks();
+                }, 500);
+            }
+
+            addTaskBtn.addEventListener('click', addTask);
+            taskList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const taskId = e.target.dataset.id;
+                    deleteTask(taskId);
+                } else if (e.target.classList.contains('priority-btn')) {
+                    const taskId = e.target.dataset.id;
+                    toggleTaskPriority(taskId);
+                }
+            });
+
             renderTasks();
-            taskInput.value = '';
-        }
-    }
-
-    function deleteTask(index) {
-        tasks.splice(index, 1);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        renderTasks();
-    }
-
-    function toggleTaskCompletion(index) {
-        tasks[index].completed = !tasks[index].completed;
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        renderTasks();
-    }
-
-    addTaskBtn.addEventListener('click', addTask);
-    taskList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('delete-btn')) {
-            const index = e.target.dataset.index;
-            deleteTask(index);
-        }
-    });
-
-    renderTasks();
-});
-
+        });
     </script>
 </body>
 </html>

@@ -46,7 +46,7 @@
 
         input {
             width: 100%;
-            padding: 0.5rem;
+            
             margin-bottom: 1rem;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -231,14 +231,29 @@
             justify-content: space-between;
             margin-bottom: 5px;
         }
+        .new_task{
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            z-index: 99;
+            width: 110vh;
+            height: 10vh;
+        }
+        .new_task.active{
+            display: block;
+        }
     </style>
 </head>
 <body>
+                <div class="new_task">
+            <button class="close_but">✖</button>
+            <input type="text" id="taskInput" placeholder="Добавьте новую задачу">
+            <button id="addTaskBtn">Добавить</button>
+            </div>
     <div class="container-wrapper">
         <div class="container" id="taskContainer">
             <h1>Список дел</h1>
-            <input type="text" id="taskInput" placeholder="Добавьте новую задачу">
-            <button id="addTaskBtn">Добавить</button>
+            <button class="new_but">+</button>
             <ul id="taskList"></ul>
         </div>
         <div class="slider-container">
@@ -443,6 +458,18 @@
 
             renderTasks();
         });
+        const NEW_TASK = document.querySelector('.new_task')
+        const New_but = document.querySelector('.new_but')
+        const Close_but = document.querySelector('.close_but')
+        New_but.addEventListener('click', function() {
+            NEW_TASK.classList.toggle('active');
+        });
+        Close_but.addEventListener('click', function() {
+            NEW_TASK.classList.toggle('active');
+        });
+        addTaskBtn.addEventListener('click',function(){
+            NEW_TASK.classList.toggle('active');
+        })
     </script>
 </body>
 </html>
